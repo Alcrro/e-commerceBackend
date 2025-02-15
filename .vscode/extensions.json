@@ -1,0 +1,22 @@
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint", // ESLint for code linting
+    "esbenp.prettier-vscode", // Prettier for code formatting
+    "mikestead.dotenv", // Syntax highlighting for .env files
+    "christian-kohler.path-intellisense", // Autocompletion for file paths
+    "christian-kohler.npm-intellisense", // Autocompletion for npm package imports
+    "steoates.autoimport", // Automatic imports
+    "streetsidesoftware.code-spell-checker", // Spell checker for code
+    "Arjun.swagger-viewer", // Swagger viewer for API docs
+    "redhat.vscode-yaml", // YAML syntax highlighting (for OpenAPI, etc.)
+    "eriklynd.json-tools", // JSON tools for manipulation
+    "hbenl.vscode-mocha-test-adapter", // Mocha test adapter
+    "Orta.vscode-jest", // Jest testing framework support
+    "emilast.logfilehighlighter", // Log file syntax highlighting
+    "ms-vscode-remote.remote-ssh", // SSH development and debugging
+    "eamodio.gitlens", // Git insights and blame
+    "aaron-bond.better-comments", // Better comments with color
+   
+    "Gruntfuggly.todo-tree"
+  ]
+}
