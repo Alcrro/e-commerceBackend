@@ -1,9 +1,31 @@
 import { Response } from 'express';
 
-type ApiResponse = {
+type ApiResponse<T = any> = {
   success: boolean;
   message: string;
-  data?: any;
+  statusCode: number;
+  meta?: {
+    count?: number;
+    pagination?: {
+      currentPage: number;
+      totalPages: number;
+      limit: number;
+      hasNextPage: boolean;
+      hasPrevPage: boolean;
+    };
+  };
+  data?: T;
+};
+
+type ApiErrorResponse = {
+  success: false;
+  message: string;
+  statusCode: number;
+  error: {
+    code: string;
+    details?: string;
+    validationErrors?: Record<string, string>; // Optional field for validation errors
+  };
 };
 
 /**
@@ -13,15 +35,18 @@ type ApiResponse = {
  * @param message - Optional message
  * @param statusCode - HTTP status code (default: 200)
  */
-export const sendSuccessResponse = (
+export const sendSuccessResponse = <T>(
   res: Response,
-  data: any,
+  data: T,
   message = 'Request was successful',
-  statusCode = 200
+  statusCode = 200,
+  meta?: ApiResponse<T>['meta']
 ): Response => {
-  const response: ApiResponse = {
+  const response: ApiResponse<T> = {
     success: true,
     message,
+    statusCode,
+    meta,
     data,
   };
   return res.status(statusCode).json(response);
@@ -42,30 +67,43 @@ export const setCookieResponse = (
 ): void => {
   res
     .cookie('authToken', token, {
-      httpOnly: true, // Make the cookie httpOnly for security
-      secure: process.env.NODE_ENV === 'production', // Only set the secure flag in production
-      sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax', // Adjust SameSite setting based on environment
+      httpOnly: true, // Prevent access via JavaScript
+      secure: process.env.NODE_ENV === 'production', // Only set `secure` in production (HTTPS required)
+      sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax', // Use `strict` in production for more security
       maxAge: 86400000, // 1 day in milliseconds
-      path: '/', // Cookie is valid for the entire domain
+      path: '/', // Available for the whole domain
+      domain:
+        process.env.NODE_ENV === 'production' ? '.lucruri-utile.ro' : undefined, // Set domain only in production
     })
     .status(status)
     .json({ message });
 };
-
 /**
  * Sends a standardized error response.
  * @param res - Express response object
  * @param message - Error message
  * @param statusCode - HTTP status code (default: 400)
+ * @param errorCode - Custom error code for easier debugging
+ * @param details - Additional error details (optional)
+ * @param validationErrors - Object containing validation error messages (optional)
  */
 export const sendErrorResponse = (
   res: Response,
   message = 'An error occurred',
-  statusCode = 400
+  statusCode = 400,
+  errorCode = 'GENERAL_ERROR',
+  details?: string,
+  validationErrors?: Record<string, string>
 ): Response => {
-  const response: ApiResponse = {
+  const response: ApiErrorResponse = {
     success: false,
     message,
+    statusCode,
+    error: {
+      code: errorCode,
+      details,
+      validationErrors,
+    },
   };
   return res.status(statusCode).json(response);
 };

@@ -1,6 +1,5 @@
 export interface Favorite {
   id: string;
-
   productCartList: [
     {
       productId: string;

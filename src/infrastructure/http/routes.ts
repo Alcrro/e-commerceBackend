@@ -9,6 +9,7 @@ import { productRouter } from './productRoutes';
 import { addressRoute } from './addressRoutes';
 import { homeMetadataRouter } from './metadata/homeRoutes';
 import { orderRouter } from './OrderRoutes';
+import { productRatingRouter } from './productRatingRoutes';
 
 const routers: Router = Router();
 
@@ -21,6 +22,7 @@ routers.use('/product', productRouter);
 routers.use('/cart', cartRouter);
 routers.use('/address', addressRoute);
 routers.use('/order', orderRouter);
+routers.use('/rating', productRatingRouter);
 routers.use('/metadata', homeMetadataRouter);
 
 export default routers;

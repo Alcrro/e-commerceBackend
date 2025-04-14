@@ -23,6 +23,10 @@ const corsOptions = {
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded payloads
 app.use(cors(corsOptions)); // Enable CORS
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Credentials', 'true'); // ✅ Explicitly allow credentials
+  next();
+});
 app.use(express.json()); // Parse incoming JSON requests
 app.use('/api', routers);
 // Error handling middleware

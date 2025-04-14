@@ -23,4 +23,5 @@ export interface IUserNotification {
   priority: NotificationPriority; // Priority of the notification
   createdAt?: Date; // Timestamp when the notification was created
   expirationDate?: Date; // Timestamp when the notification will expire
+  viewed?: boolean;
 }

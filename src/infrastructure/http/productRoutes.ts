@@ -11,6 +11,10 @@ productRouter.post(
 );
 
 productRouter.get(
-  '/get-products',
+  '/get-products/:category?',
   asyncHandler(productController.GetAllProduct)
+);
+productRouter.get(
+  '/get-product/:id',
+  asyncHandler(productController.GetProductId)
 );

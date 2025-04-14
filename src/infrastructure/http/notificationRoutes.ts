@@ -6,7 +6,7 @@ export const notificationRouter = Router();
 export const notificationController = makeNotificationController();
 
 notificationRouter.post(
-  '/notification',
+  '/create-notification',
   asyncHandler(notificationController.createNotification)
 );
 notificationRouter.get(
@@ -16,4 +16,12 @@ notificationRouter.get(
 notificationRouter.get(
   '/get-notification/:id',
   asyncHandler(notificationController.fetchNotification)
+);
+notificationRouter.patch(
+  '/update-notification/:notificationId',
+  asyncHandler(notificationController.UpdateNotification)
+);
+notificationRouter.delete(
+  '/delete-notification/:notificationId',
+  asyncHandler(notificationController.DeleteNotification)
 );

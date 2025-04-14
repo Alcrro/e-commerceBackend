@@ -3,6 +3,7 @@ import { Router } from 'express';
 import { asyncHandler } from '../middlewares/asyncHandler';
 
 export const addressRoute = Router();
+
 const addressController = makeAddressController();
 addressRoute.post(
   '/create-address',

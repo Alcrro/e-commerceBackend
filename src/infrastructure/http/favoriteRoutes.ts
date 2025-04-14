@@ -14,7 +14,7 @@ favoriteRoute.get(
   '/get-favorite/:slug?',
   asyncHandler(favoriteController.GetFavorite)
 );
-favoriteRoute.post(
+favoriteRoute.delete(
   '/remove-favorite',
   asyncHandler(favoriteController.RemoveFavorite)
 );

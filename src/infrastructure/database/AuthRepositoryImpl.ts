@@ -37,6 +37,7 @@ export class AuthRepositoryImpl implements AuthRepository {
     password: string
   ): Promise<AuthPresenter | null> {
     const user = await UserModel.findOne({ email });
+
     if (!user) return null;
 
     const isValidPassword = await bcrypt.compare(password, user.password);

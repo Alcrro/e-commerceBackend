@@ -7,7 +7,7 @@ export interface FavoriteRepository {
     price: number
   ): Promise<Favorite>;
   getFavorite(userId: string, slug?: string): Promise<Favorite | null>;
-  removeFavorite(userId: string, productId: string): Promise<Favorite[] | []>;
+  removeFavorite(userId: string, productId: string): Promise<Favorite>;
   decreaseQuantityAndPrice(
     userId: string,
     productId: string

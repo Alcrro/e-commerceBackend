@@ -26,8 +26,8 @@ export class FavoriteController {
     // Extract the product ID from the request body
     const { productId, price } = req.body;
 
-    if (!productId) {
-      res.status(400).json({ message: 'Product ID is required' });
+    if (!productId || !price) {
+      res.status(400).json({ message: 'Product and price is required' });
     }
 
     // Call the favorite service to add the product

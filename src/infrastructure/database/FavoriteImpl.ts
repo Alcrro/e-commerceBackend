@@ -114,10 +114,7 @@ export class FavoriteImpl implements FavoriteRepository {
   }
 
   // Remove the product completely from the favorite list
-  async removeFavorite(
-    token: string,
-    productId: string
-  ): Promise<Favorite[] | []> {
+  async removeFavorite(token: string, productId: string): Promise<Favorite> {
     try {
       // Verify the token and extract the user ID
       const verifyToken = jwt.verify(token, config.jwtSecret) as JwtPayload;
@@ -248,39 +245,35 @@ export class FavoriteImpl implements FavoriteRepository {
     const userId = verifyToken.userId;
 
     // Find the user's favorite document or create a new one
-    const favorite = await FavoriteModel.findOneAndUpdate(
+    let favorite = await FavoriteModel.findOneAndUpdate(
       { userId },
       {},
       { new: true, upsert: true }
     );
 
     // Check if the product exists in the favorite list
-    const product = favorite.productCartList.find(
+    const productExists = favorite.productCartList.some(
       (item: any) => item.productId.toString() === productId
     );
 
-    if (product) {
-      // Update the product's price and increment the quantity
-      product.quantity = (product.quantity || 1) + 1; // Increment quantity
-      product.price = price * ((product.quantity || 1) + 1);
+    if (productExists) {
+      // If the product exists, call removeFavorite directly
+      favorite = await this.removeFavorite(token, productId);
     } else {
-      // Add the new product to the list
-      favorite.productCartList.push({
-        productId,
-        price,
-        quantity: 1,
-      });
+      // Otherwise, add the product
+      favorite.productCartList.push({ productId, price, quantity: 1 });
+
+      // Recalculate the total price
+      favorite.totalPrice = favorite.productCartList.reduce(
+        (sum: number, item: { price: number; quantity: number }) =>
+          sum + item.price * item.quantity,
+        0
+      );
+
+      // Save the updated favorite document
+      await favorite.save();
     }
 
-    // Recalculate the total price
-    favorite.totalPrice = favorite.productCartList.reduce(
-      (sum: number, item: { price: number; quantity: number }) =>
-        sum + item.price * item.quantity,
-      0
-    );
-
-    // Save the updated favorite document
-    await favorite.save();
     return favorite;
   }
 }

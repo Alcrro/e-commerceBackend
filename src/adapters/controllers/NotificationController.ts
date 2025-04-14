@@ -1,16 +1,19 @@
+import { DeleteNotification } from './../../use-cases/notification/deleteNotification';
 import { Types } from 'mongoose';
-import { NextFunction, Request, Response } from 'express';
-import { NotificationRepositoryImpl } from '../../infrastructure/database/NotificationRepositoryImpl';
+import { Request, Response } from 'express';
 import { IUserNotification } from '../../domain/entities/UserNotification';
 import { sendSuccessResponse } from '../../infrastructure/utils/responseUtils';
 import { extractToken } from '../../infrastructure/utils/tokenUtils';
 import { CreateNotification } from '../../use-cases/notification/CreateNotification';
 import { GetNotification } from '../../use-cases/notification/getNotification';
+import { UpdateNotification } from '../../use-cases/notification/updateNotification';
 
 export class NotificationController {
   constructor(
     private readonly createNotificationUseCase: CreateNotification,
-    private readonly getNotificationUseCase: GetNotification
+    private readonly getNotificationUseCase: GetNotification,
+    private readonly updateNotificationUseCase: UpdateNotification,
+    private readonly deleteNotificationUseCase: DeleteNotification
   ) {}
 
   createNotification = async (req: Request, res: Response) => {
@@ -62,5 +65,46 @@ export class NotificationController {
       id
     );
     sendSuccessResponse(res, fetchNotification, 'loaded Successfully', 201);
+  };
+
+  UpdateNotification = async (req: Request, res: Response) => {
+    // Extract the token from the Authorization header
+    const authHeader = req.headers;
+
+    const token = extractToken(authHeader);
+
+    if (!token) throw new Error('Token is invalid');
+    const { notificationId } = req.params;
+    console.log('notId: ', notificationId);
+    console.log('token: ', token);
+
+    const updateNotification = await this.updateNotificationUseCase.execute(
+      token,
+      notificationId
+    );
+
+    console.log(updateNotification);
+
+    sendSuccessResponse(res, updateNotification, 'update Successfully', 201);
+  };
+  DeleteNotification = async (req: Request, res: Response) => {
+    // Extract the token from the Authorization header
+    const authHeader = req.headers;
+
+    const token = extractToken(authHeader);
+
+    if (!token) throw new Error('Token is invalid');
+    const { notificationId } = req.params;
+    console.log('notId: ', notificationId);
+    console.log('token: ', token);
+
+    const updateNotification = await this.deleteNotificationUseCase.execute(
+      token,
+      notificationId
+    );
+
+    console.log(updateNotification);
+
+    sendSuccessResponse(res, updateNotification, 'Delete Successfully', 300);
   };
 }

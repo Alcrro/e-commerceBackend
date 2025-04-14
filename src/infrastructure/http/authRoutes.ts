@@ -6,12 +6,14 @@ import { LoginUser } from '../../use-cases/auth/LoginUser';
 import { ValidateToken } from '../../use-cases/auth/ValidateToken';
 import { ResetPassword } from '../../use-cases/auth/ResetPassword';
 import { asyncHandler } from '../middlewares/asyncHandler';
+import { SequelizeUserRepository } from '../database/SequalizeUserRepository';
 
 const authRouter = Router();
 
 // Dependency Injection
 const authRepository = new AuthRepositoryImpl();
-const registerUser = new RegisterUser(authRepository);
+const userRepository = new SequelizeUserRepository();
+const registerUser = new RegisterUser(authRepository, userRepository);
 const loginUser = new LoginUser(authRepository);
 const validateToken = new ValidateToken(authRepository);
 const resetPassword = new ResetPassword(authRepository);

@@ -8,6 +8,8 @@ export interface IAddress {
   postalCode: string;
   country: string;
   isDefault: boolean;
+  latitude?: number;
+  longitude?: number;
   createdAt?: Date;
   updatedAt?: Date;
 }

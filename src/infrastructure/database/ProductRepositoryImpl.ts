@@ -7,6 +7,7 @@ import {
 } from '../model/product/BaseProductModel';
 import LaptopProductModel from '../model/product/LaptopProductModel';
 import PhoneProductModel from '../model/product/PhoneProductModel';
+import { getProductsWithFiltersPipeline } from '../piplines/productPipeline';
 
 export class ProductRepositoryImpl implements ProductRepository {
   private readonly modelMap: Record<string, Model<any>>;
@@ -18,6 +19,32 @@ export class ProductRepositoryImpl implements ProductRepository {
       laptop: LaptopProductModel,
       default: BaseProductModel,
     };
+  }
+  async getFilterOptions(category: string) {
+    const products = await BaseProductModel.find({ category }).lean();
+
+    const filterOptions: Record<string, Set<any>> = {};
+
+    products.forEach((product) => {
+      for (const [key, value] of Object.entries(product.attributes)) {
+        if (!filterOptions[key]) {
+          filterOptions[key] = new Set();
+        }
+
+        if (Array.isArray(value)) {
+          value.forEach((val) => filterOptions[key].add(val));
+        } else {
+          filterOptions[key].add(value);
+        }
+      }
+    });
+
+    return Object.fromEntries(
+      Object.entries(filterOptions).map(([key, values]) => [
+        key,
+        Array.from(values),
+      ])
+    );
   }
 
   async update(
@@ -50,7 +77,9 @@ export class ProductRepositoryImpl implements ProductRepository {
 
   async findById(id: string): Promise<ProductDocument | null> {
     try {
-      const product = await BaseProductModel.findById(id).exec();
+      console.log(id);
+
+      const product = await BaseProductModel.findById(id);
       return product;
     } catch (error) {
       console.error('Error finding product by ID:', error);
@@ -58,10 +87,22 @@ export class ProductRepositoryImpl implements ProductRepository {
     }
   }
 
-  async findAll(): Promise<ProductDocument[]> {
+  async findAll(
+    category: string | string[],
+    filters: Record<string, string | string[]>,
+    page: number,
+    limit: number
+  ): Promise<ProductDocument[]> {
     try {
-      const products = await BaseProductModel.find({});
-      return products;
+      const pipeline = getProductsWithFiltersPipeline(
+        category,
+        filters,
+        page,
+        limit
+      );
+      const result = await BaseProductModel.aggregate(pipeline);
+
+      return result[0];
     } catch (error) {
       console.error('Error fetching all products:', error);
       return [];

@@ -6,6 +6,64 @@ import UserNotification from '../model/UserNotificationModel';
 import mongoose, { Types } from 'mongoose';
 
 export class NotificationRepositoryImpl implements NotificationRepository {
+  async deleteNotification(
+    userId: string,
+    notificationId: string
+  ): Promise<Partial<IUserNotification>> {
+    const verifyToken = jwt.verify(userId, config.jwtSecret) as JwtPayload;
+
+    if (!mongoose.Types.ObjectId.isValid(verifyToken.userId)) {
+      throw new Error('Invalid user ID format');
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(notificationId)) {
+      throw new Error('Invalid notification ID format');
+    }
+
+    const userObjectId = new mongoose.Types.ObjectId(verifyToken.userId);
+    const notifObjectId = new mongoose.Types.ObjectId(notificationId);
+
+    const deleteNotification = await UserNotification.findOneAndDelete({
+      userId: userObjectId,
+      _id: notifObjectId,
+    });
+    if (!deleteNotification) {
+      throw new Error('Notification not found or already deleted');
+    }
+
+    return deleteNotification;
+  }
+  async updateNotification(
+    userId: string,
+    notificationId: string
+  ): Promise<Partial<IUserNotification>> {
+    const verifyToken = jwt.verify(userId, config.jwtSecret) as JwtPayload;
+
+    if (!mongoose.Types.ObjectId.isValid(verifyToken.userId)) {
+      throw new Error('Invalid user ID format');
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(notificationId)) {
+      throw new Error('Invalid notification ID format');
+    }
+
+    const userObjectId = new mongoose.Types.ObjectId(verifyToken.userId);
+    const notifObjectId = new mongoose.Types.ObjectId(notificationId);
+
+    const updateN = await UserNotification.findOneAndUpdate(
+      {
+        userId: userObjectId,
+        _id: notifObjectId,
+      },
+      {
+        viewed: false,
+      }
+    );
+
+    console.log('Updated Notification:', updateN);
+    return updateN;
+  }
+
   async getNotification(
     token: string,
     id: string
@@ -25,7 +83,7 @@ export class NotificationRepositoryImpl implements NotificationRepository {
     if (!id) {
       const getNotification = await UserNotification.find({
         userId: objId,
-      });
+      }).sort({ createdAt: -1 });
       return getNotification;
     } else {
       const getNotification = await UserNotification.find({

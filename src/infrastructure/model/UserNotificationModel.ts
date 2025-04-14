@@ -39,6 +39,7 @@ const UserNotificationSchema = new Schema<IUserNotificationSchema>({
   expirationDate: {
     type: Date,
   },
+  viewed: { type: Boolean, default: false },
 });
 
 // Middleware to set expiration date based on priority

@@ -9,9 +9,11 @@ interface ProductDocument extends Product {
   description: string; // Detailed description
   price: number; // Price of the product
   category: ProductCategories; // Category to which the product belongs
+  brand: string;
   stock: number; // Quantity available in stock
   images: string[]; // Optional array of image URLs
   thumbnail: string; // image URLs
+  attributes: Record<string, any>; // Dynamic attributes stored here!
   createdAt: Date; // Date when the product was added
   updatedAt: Date; // Date when the product details were last updated
 }
@@ -25,6 +27,7 @@ const BaseProductSchema = new mongoose.Schema<ProductDocument>(
     isActive: { type: Boolean, default: true },
     images: { type: [String], required: true },
     thumbnail: { type: String, required: true },
+    attributes: { type: mongoose.Schema.Types.Mixed, default: {} }, // Dynamic attributes
   },
   { timestamps: true, discriminatorKey: 'productType' }
 );
