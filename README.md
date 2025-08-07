@@ -19,28 +19,28 @@ Backend-ul pentru un e-commerce de tip Amazon, construit cu **Express.js** și a
 
 ## 📁 Structură Clean Architecture
 
+<details> <summary>✅ Versiune corectă (copiază așa cum e):</summary>
+/backend
 ├── src
-│ ├── domain
-│ │ └── entities → entități pure (Product, User, Order)
-│ │ └── interfaces → interfețe (ex: IProductRepo)
-│
-│ ├── use-cases
-│ │ └── product → business logic (ex: createProduct.ts)
-│ │ └── user → auth logic (ex: registerUser.ts)
-│
-│ ├── infrastructure
-│ │ └── db → conexiune MongoDB, Mongoose models
-│ │ └── email → nodemailer utils (opțional)
-│
-│ ├── adapters
-│ │ └── controllers → request handlers (Express route logic)
-│ │ └── routes → definirea endpointurilor Express
-│ │ └── middlewares → auth, error handling
-│
-│ ├── config → env, constants
-│ └── server.ts → inițializare aplicație
+│   ├── domain
+│   │   ├── entities         → entități pure (Product, User, Order)
+│   │   └── interfaces       → interfețe (IUserRepo, IProductRepo)
+│   ├── use-cases
+│   │   ├── product          → business logic pentru produse
+│   │   └── user             → business logic pentru useri
+│   ├── infrastructure
+│   │   ├── db               → conexiune MongoDB, modele Mongoose
+│   │   └── email            → nodemailer utils (opțional)
+│   ├── adapters
+│   │   ├── controllers      → Express route logic
+│   │   ├── routes           → definirea endpointurilor
+│   │   └── middlewares      → autentificare, validare, erori
+│   ├── config               → variabile de mediu, constante
+│   └── server.ts            → inițializare server Express
 ├── .env
+├── .env.example
 ├── package.json
+</details>
 
 
 ## 🔐 Funcționalități MVP
@@ -54,4 +54,5 @@ Backend-ul pentru un e-commerce de tip Amazon, construit cu **Express.js** și a
 | **Order**   | - Create order with shipping info (fără plată reală)         |
 
 ---
+
 
