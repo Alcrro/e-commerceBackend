@@ -20,6 +20,7 @@ Backend-ul pentru un e-commerce de tip Amazon, construit cu **Express.js** și a
 ## 📁 Structură Clean Architecture
 
 <details> <summary>✅ Versiune corectă (copiază așa cum e):</summary>
+```text
 /backend
 ├── src
 │   ├── domain
@@ -40,6 +41,7 @@ Backend-ul pentru un e-commerce de tip Amazon, construit cu **Express.js** și a
 ├── .env
 ├── .env.example
 ├── package.json
+```
 </details>
 
 
@@ -54,5 +56,6 @@ Backend-ul pentru un e-commerce de tip Amazon, construit cu **Express.js** și a
 | **Order**   | - Create order with shipping info (fără plată reală)         |
 
 ---
+
 
 
