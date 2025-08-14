@@ -145,4 +145,5 @@ MIT – folosește, modifică și construiește liber.
 
 ## 👨‍💻 Autor
 
-Creat cu disciplină și simplitate de [Your Name](https://github.com/yourusername)
+Creat cu disciplină și simplitate de [alcrro](https://github.com/alcrro)
+
